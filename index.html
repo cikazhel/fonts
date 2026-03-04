@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cikazhel Fonts</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #ffffff; }
+        .tab-active { background-color: #4f46e5; color: white; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .loading-shimmer { background: #f9fafb; position: relative; overflow: hidden; }
+        .loading-shimmer::after { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, #f3f4f6, transparent); animation: shimmer 1.5s infinite; }
+        @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+    </style>
+</head>
+<body class="text-slate-900">
+
+    <header class="border-b border-slate-100 sticky top-0 z-50 bg-white">
+        <div class="max-w-6xl mx-auto px-6 py-6 flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div class="flex items-center gap-4">
+                <img id="owner-avatar" src="" alt="" class="w-14 h-14 rounded-full bg-slate-100 border-2 border-indigo-600 p-0.5">
+                <div>
+                    <h1 class="text-xl font-extrabold tracking-tight">cikazhel/fonts</h1>
+                    <p class="text-[10px] text-indigo-600 font-bold uppercase tracking-[0.2em]">Super cool fonts</p>
+                </div>
+            </div>
+            
+            <div class="w-full md:w-1/2">
+                <input type="text" id="sample-text" 
+                       class="w-full bg-slate-50 border-2 border-slate-100 rounded-xl px-5 py-3 text-sm focus:border-indigo-600 focus:outline-none transition-colors"
+                       value="The quick brown fox jumps over the lazy dog">
+            </div>
+        </div>
+        
+        <div class="max-w-6xl mx-auto px-6 overflow-x-auto no-scrollbar">
+            <nav id="tabs-container" class="flex gap-2 py-4 whitespace-nowrap">
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-6 py-10">
+        <div id="font-list" class="flex flex-col gap-4">
+        </div>
+    </main>
+
+    <script>
+        const OWNER = "cikazhel";
+        const REPO = "fonts";
+        const API_BASE = `https://api.github.com/repos/${OWNER}/${REPO}/contents/`;
+        const fontList = document.getElementById('font-list');
+        const tabsContainer = document.getElementById('tabs-container');
+        const sampleTextInput = document.getElementById('sample-text');
+        const avatarImg = document.getElementById('owner-avatar');
+
+        async function init() {
+            fetch(`https://api.github.com/users/${OWNER}`)
+                .then(res => res.json())
+                .then(data => { 
+                    avatarImg.src = data.avatar_url;
+                    setFavicon(data.avatar_url);
+                });
+
+            try {
+                const response = await fetch(API_BASE);
+                const contents = await response.json();
+                const folders = contents.filter(item => item.type === 'dir');
+                
+                if (folders.length === 0) {
+                    renderTabs([{ name: 'Main', path: '' }]);
+                    loadFolder('');
+                } else {
+                    renderTabs(folders);
+                    loadFolder(folders[0].path);
+                }
+            } catch (err) {
+                fontList.innerHTML = `<div class="py-20 text-center text-slate-400">Connection error.</div>`;
+            }
+        }
+
+        function setFavicon(url) {
+            let link = document.querySelector("link[rel~='icon']");
+            if (!link) {
+                link = document.createElement('link');
+                link.rel = 'icon';
+                document.head.appendChild(link);
+            }
+            link.href = url;
+        }
+
+        function renderTabs(folders) {
+            tabsContainer.innerHTML = '';
+            folders.forEach((folder, index) => {
+                const tab = document.createElement('button');
+                tab.className = `px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all border-2 border-transparent ${index === 0 ? 'tab-active' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}`;
+                tab.innerText = folder.name;
+                tab.onclick = () => {
+                    document.querySelectorAll('#tabs-container button').forEach(b => {
+                        b.classList.remove('tab-active');
+                        b.classList.add('bg-slate-100', 'text-slate-500');
+                    });
+                    tab.classList.add('tab-active');
+                    tab.classList.remove('bg-slate-100', 'text-slate-500');
+                    loadFolder(folder.path);
+                };
+                tabsContainer.appendChild(tab);
+            });
+        }
+
+        async function loadFolder(path) {
+            fontList.innerHTML = Array(5).fill(0).map(() => 
+                `<div class="h-32 rounded-2xl loading-shimmer"></div>`
+            ).join('');
+
+            try {
+                const response = await fetch(path ? `${API_BASE}${path}` : API_BASE);
+                const items = await response.json();
+                const fonts = items.filter(file => /\.(ttf|otf|woff2|woff)$/i.test(file.name));
+                
+                fontList.innerHTML = '';
+                if (fonts.length === 0) {
+                    fontList.innerHTML = `<div class="py-20 text-center text-slate-400">No fonts found.</div>`;
+                    return;
+                }
+
+                fonts.forEach(font => renderFontRow(font));
+                lucide.createIcons();
+            } catch (err) {
+                fontList.innerHTML = `<div class="py-20 text-center text-slate-400">Error loading.</div>`;
+            }
+        }
+
+        async function renderFontRow(font) {
+            const fontName = font.name.replace(/\.[^/.]+$/, "").replace(/[-_]/g, ' ');
+            const rowId = `r-${font.sha}`;
+            const fontId = `f-${font.sha}`;
+            
+            const row = document.createElement('div');
+            row.className = "bg-white border-2 border-slate-100 p-6 rounded-2xl flex flex-col lg:flex-row lg:items-center justify-between gap-6 transition-colors";
+            row.innerHTML = `
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="text-[9px] font-black bg-indigo-100 text-indigo-600 px-2 py-0.5 rounded uppercase">${font.name.split('.').pop()}</span>
+                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest truncate">${fontName}</h3>
+                    </div>
+                    <p id="${rowId}-preview" class="text-3xl lg:text-4xl overflow-hidden text-ellipsis whitespace-nowrap leading-relaxed" style="visibility: hidden">
+                        ${sampleTextInput.value}
+                    </p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button onclick="copyLink('${font.download_url}', this)" 
+                            class="flex items-center gap-2 px-5 py-3 text-xs font-bold uppercase tracking-widest text-indigo-600 bg-indigo-50 rounded-xl hover:bg-indigo-100 transition-colors">
+                        <i data-lucide="copy" class="w-4 h-4"></i> Copy Link
+                    </button>
+                    <a href="${font.download_url}" download 
+                       class="flex items-center gap-2 px-5 py-3 text-xs font-bold uppercase tracking-widest bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-colors">
+                        <i data-lucide="download-cloud" class="w-4 h-4"></i> Download
+                    </a>
+                </div>
+            `;
+            
+            fontList.appendChild(row);
+            
+            try {
+                const fontFace = new FontFace(fontId, `url(${font.download_url})`);
+                await fontFace.load();
+                document.fonts.add(fontFace);
+                const preview = document.getElementById(`${rowId}-preview`);
+                preview.style.fontFamily = fontId;
+                preview.style.visibility = 'visible';
+                sampleTextInput.addEventListener('input', (e) => {
+                    preview.innerText = e.target.value || "...";
+                });
+            } catch (e) {
+                const preview = document.getElementById(`${rowId}-preview`);
+                preview.innerText = "Error loading font preview";
+                preview.className = "text-sm text-slate-300 italic";
+                preview.style.visibility = 'visible';
+            }
+        }
+
+        async function copyLink(text, btn) {
+            await navigator.clipboard.writeText(text);
+            const original = btn.innerHTML;
+            btn.innerHTML = `<i data-lucide="check" class="w-4 h-4"></i> Copied`;
+            btn.classList.replace('bg-indigo-50', 'bg-green-100');
+            btn.classList.replace('text-indigo-600', 'text-green-700');
+            lucide.createIcons();
+            setTimeout(() => {
+                btn.innerHTML = original;
+                btn.classList.replace('bg-green-100', 'bg-indigo-50');
+                btn.classList.replace('text-green-700', 'text-indigo-600');
+                lucide.createIcons();
+            }, 2000);
+        }
+
+        init();
+    </script>
+</body>
+</html>

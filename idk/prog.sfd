@@ -1,0 +1,149 @@
+SplineFontDB: 3.2
+FontName: Untitled1
+FullName: Untitled1
+FamilyName: Untitled1
+Weight: Regular
+Copyright: Copyright (c) 2026, cikazhel
+UComments: "2026-3-16: Created with FontForge (http://fontforge.org)"
+Version: 001.000
+ItalicAngle: 0
+UnderlinePosition: -100
+UnderlineWidth: 50
+Ascent: 800
+Descent: 200
+InvalidEm: 0
+LayerCount: 3
+Layer: 0 0 "Back" 1
+Layer: 1 0 "Fore" 0
+Layer: 2 0 "Back 2" 1
+XUID: [1021 670 -2114697923 9732]
+OS2Version: 0
+OS2_WeightWidthSlopeOnly: 0
+OS2_UseTypoMetrics: 1
+CreationTime: 1773666559
+ModificationTime: 1773684251
+OS2TypoAscent: 0
+OS2TypoAOffset: 1
+OS2TypoDescent: 0
+OS2TypoDOffset: 1
+OS2TypoLinegap: 0
+OS2WinAscent: 0
+OS2WinAOffset: 1
+OS2WinDescent: 0
+OS2WinDOffset: 1
+HheadAscent: 0
+HheadAOffset: 1
+HheadDescent: 0
+HheadDOffset: 1
+OS2Vendor: 'PfEd'
+MarkAttachClasses: 1
+DEI: 91125
+Encoding: ISO8859-1
+UnicodeInterp: none
+NameList: AGL For New Fonts
+DisplaySize: -48
+AntiAlias: 1
+FitToEm: 0
+WinInfo: 63 21 4
+BeginPrivate: 0
+EndPrivate
+AnchorClass2: "j""" 
+BeginChars: 256 2
+
+StartChar: A
+Encoding: 65 65 0
+Width: 800
+InSpiro: 1
+Flags: HMW
+LayerCount: 3
+Fore
+SplineSet
+200 379 m 1
+ 600 379 l 1
+ 600 279 l 1
+ 200 279 l 1
+ 200 379 l 1
+  Spiro
+    200 379 v
+    600 379 v
+    600 279 v
+    200 279 v
+    0 0 z
+  EndSpiro
+0 0 m 1
+ 350 800 l 1
+ 450 800 l 1
+ 800 0 l 1
+ 700 0 l 1
+ 400 700 l 1
+ 100 0 l 1
+ 0 0 l 1
+  Spiro
+    0 0 v
+    350 800 v
+    450 800 v
+    800 0 v
+    700 0 v
+    400 700 v
+    100 0 v
+    0 0 z
+  EndSpiro
+EndSplineSet
+EndChar
+
+StartChar: B
+Encoding: 66 66 1
+Width: 800
+InSpiro: 1
+Flags: HWO
+LayerCount: 3
+Fore
+SplineSet
+400 0 m 0
+ 459.729004906 -1.31288392426 519.618204127 22.3452616019 562.32484227 64.123494568 c 0
+ 605.031480414 105.901727534 630 165.256567798 630 225 c 0
+ 630 284.743432202 605.031480414 344.098272466 562.32484227 385.876505432 c 0
+ 519.618204127 427.654738398 459.729004906 451.312883924 400 450 c 1
+ 400 350 l 1
+ 459.729004906 348.687116076 519.618204127 372.345261602 562.32484227 414.123494568 c 0
+ 605.031480414 455.901727534 630 515.256567798 630 575 c 0
+ 630 634.743432202 605.031480414 694.098272466 562.32484227 735.876505432 c 0
+ 519.618204127 777.654738398 459.729004906 801.312883924 400 800 c 2
+ 0 800 l 1
+ 0 0 l 1
+ 400 0 l 1025
+  Spiro
+    400 0 {
+    630 225 c
+    400 450 v
+    400 350 v
+    630 575 c
+    400 800 v
+    0 800 v
+    0 0 v
+    400 0 v
+    0 0 z
+  EndSpiro
+EndSplineSet
+Layer: 2
+SplineSet
+400 350 m 2
+ 459.729004906 348.687116076 519.618204127 372.345261602 562.32484227 414.123494568 c 0
+ 605.031480414 455.901727534 630 515.256567798 630 575 c 0
+ 630 634.743432202 605.031480414 694.098272466 562.32484227 735.876505432 c 0
+ 519.618204127 777.654738398 459.729004906 801.312883924 400 800 c 2
+ 0 800 l 1
+ 0 350 l 1
+ 400 350 l 2
+  Spiro
+    400 350 v
+    630 575 c
+    400 800 v
+    0 800 v
+    0 350 v
+    0 0 z
+  EndSpiro
+EndSplineSet
+EndChar
+EndChars
+EndSplineFont
